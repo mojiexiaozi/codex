@@ -8,3 +8,9 @@ include_directories(${ROOT}/include)
 
 add_executable(${PROJECT_NAME} ${SRCS})
 target_link_libraries(${PROJECT_NAME} ${OpenCV})
+
+add_subdirectory(test_node)
+IF(CMAKE_SYSTEM_NAME MATCHES Linux)
+target_link_libraries(${PROJECT_NAME} dl)
+ELSE()
+ENDIF()

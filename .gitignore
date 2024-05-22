@@ -32,4 +32,6 @@
 *.app
 
 build/
-thirdparty/
+thirdparty/*
+!thirdparty/include
+.vscode/

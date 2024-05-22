@@ -1,5 +1,14 @@
 #pragma once
 
+#include <string>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <variant>
+#include <opencv2/opencv.hpp>
+#include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
+
 #ifndef UTILS_NAMESPACE_BEGIN
 #define UTILS_NAMESPACE_BEGIN \
     namespace utils           \
@@ -24,16 +33,65 @@
 #define OS_UNKNOWN 4
 #endif // OS detect
 
-#ifndef API
+#ifndef EXPORT
+#define EXPORT extern "C"
+#define EXPORT_BEGIN \
+    extern "C"       \
+    {
+#define EXPORT_END }
 #ifdef OS_WINDOWS
-#define API extern "C" __declspec(dllexport)
-#elif defined(OS_LINUX)
-#define API extern "C"
+#define EXPORT extern "C" __declspec(dllexport)
+#define EXPORT_BEGIN                 \
+    extern "C" __declspec(dllexport) \
+    {
+#define EXPORT_END }
 #else
 /*OS_UNKNOWN*/
 #endif
 #endif
 
 UTILS_NAMESPACE_BEGIN
+template <typename T>
+int find(const std::vector<T> &vec, const T &target)
+{
+    auto it = std::find(vec.begin(), vec.end(), target);
+    if (it == vec.end())
+    {
+        return -1;
+    }
 
+    return std::distance(vec.begin(), it);
+}
+
+template <typename T, typename FUNC>
+int find_if(const std::vector<T> &vec, FUNC func)
+{
+    auto it = std::find_if(vec.begin(), vec.end(), func);
+    if (it == vec.end())
+    {
+        return -1;
+    }
+
+    return std::distance(vec.begin(), it);
+}
+
+template <typename T, typename FUNC>
+std::vector<T> get_if(const std::vector<T> &source, FUNC func)
+{
+    std::vector<T> res;
+    std::copy_if(source.begin(), source.end(), std::back_inserter(res), func);
+    return res;
+}
+
+template <typename T, typename FUNC>
+void copy_if(const std::vector<T> &source, std::vector<T> &dest, FUNC func)
+{
+    std::copy_if(source.begin(), source.end(), std::back_inserter(dest), func);
+}
+
+template <typename K, typename V>
+bool find(const std::map<K, V> d, K key)
+{
+    return d.find(key) != d.end();
+}
 UTILS_NAMESPACE_END

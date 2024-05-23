@@ -28,7 +28,7 @@ bool call_func(const char *lib_name, const char *func_name, T &res, Args... args
         return false;
     }
     // 获取共享库中的函数指针并调用
-    func_p = (FuncPtr)GetProcAddress(handle, func_name);
+    func_p = reinterpret_cast<FuncPtr<T, Args...>>GetProcAddress(handle, func_name);
     if (!func_p)
     {
         spdlog::error("Failed to get function pointer: ", dlerror());

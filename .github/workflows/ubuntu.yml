@@ -58,7 +58,7 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1
 
       - name: checkout repository
-        uses: action/checkout@v2
+        uses: action/checkout@v3
 
       - name: Build project
         # if: matrix.os == 'ubuntu-20.04'

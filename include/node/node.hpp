@@ -23,8 +23,8 @@ public:
         {
             props.push_back(p.second->dumps());
         }
-        cfg["node_type"] = this->node_type;
-        cfg["name"] = this->name;
+        cfg["node_type"] = Node::node_type;
+        cfg["name"] = Node::name;
 
         cfg["user_name"] = this->user_name_;
         cfg["id"] = this->id_;
@@ -131,10 +131,10 @@ public:
     static const std::string node_type;
 
 protected:
-    Node(const std::string& name, uint id) : user_name_(name), id_(id)
+    Node(const std::string &name, uint id) : user_name_(name), id_(id)
     {
     }
-    Node(const nlohmann::json& cfg)
+    Node(const nlohmann::json &cfg)
     {
         this->id_ = cfg["id"];
         this->user_name_ = cfg["user_name"];

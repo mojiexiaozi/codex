@@ -20,8 +20,8 @@ jobs:
         os: [ubuntu-22.04]
         qt_ver: [6.2.2]
         qt_arch: [gcc_64]
-        build_type: [Debug, Release]
-        build_target: [install]
+        # build_type: [Debug, Release]
+        # build_target: [install]
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -37,6 +37,8 @@ jobs:
         # with:
         #   submodules: 'true'
         #   fetch-depth: 0
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v1
       - name: Configure CMake
         run: cmake -S . -B build
       - name: Build

@@ -1,5 +1,6 @@
-name: Ubuntu
+name: Build Qt Project
 on:
+  # 触发时机
   push:
     paths-ignore:
       - 'README.md'
@@ -13,42 +14,70 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.build_target }} - ${{ matrix.os }} - build
+    # 编译环境
     runs-on: ${{ matrix.os }}
+    # 编译矩阵策略
     strategy:
       matrix:
-        os: [ubuntu-20.04]
-        qt_ver: [6.2.2]
-        qt_arch: [gcc_64]
-        # build_type: [Debug, Release]
-        # build_target: [install]
+        os: [ubuntu-20.04, windows-2019]
+        qt-version: [6.2.2]
     steps:
-      - name: Install Qt
+      - name: setup Qt on Ubuntu
+        if: matrix.os == 'ubuntu-20.04'
         uses: jurplel/install-qt-action@v2
         with:
-          version: ${{ matrix.qt_ver }}
-          cached: 'false'
-      - name: ubuntu install GL library
+          version: ${{ matrix.qt-version }}
+          host: 'ubuntu'
+          target: 'desktop'
+          arch: 'gcc_64'
+          dir: '$HOME/Qt'
+          cached: true
+      - name: setup Qt on Windows
+        if: matrix.os == 'windows-2019'
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ matrix.qt-version }}
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          dir: 'C:\\Qt'
+          cached: true
+      - name: Install dependencies on ubuntu
+        if: matrix.os == 'ubuntu-20.04'
         run: |
-          sudo apt update
-          sudo apt-get install -y libglew-dev libglfw3-dev cmake g++ make gcc
-      - name: checkout
-        uses: actions/checkout@v3
-        # with:
-        #   submodules: 'true'
-        #   fetch-depth: 0
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ libgl1-mesa-dev
+      
+      - name: Install dependencies on Windows
+        if: matrix.os == 'windows-2019'
+        run: |
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+        setx PATH "%PATH%;C:\\Qt\\${{ matrix.qt-version }}\\msvc2019_64\\bin"
+
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1
-      - name: Configure CMake
-        run: cmake -S . -B build
-      - name: Build
-        run: cmake --build build
 
-      - name: move lib
-        run: mv build/lib build/bin/
+      - name: checkout repository
+        uses: action/checkout@v2
+
+      - name: Build project
+        # if: matrix.os == 'ubuntu-20.04'
+        run: |
+          cmake -S . -B build
+          cmake --build build
+
+      - name: Move library files to bin directory on Ubuntu
+        if: matrix.os == 'ubuntu-20.04'
+        run: |
+          mv build/lib build/bin/
+
+      - name: Move library files to bin directory on Windows
+        if: matrix.os == 'windows-2019'
+        run: |
+          move build\\lib build\\bin\\
       
       - name: Upload bin artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: bin-artifacts
+          name: build-${{ matrix.os }}-qt-${{ matrix.qt-version }}
           path: build/bin/

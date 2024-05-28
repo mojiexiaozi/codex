@@ -17,7 +17,7 @@ jobs:
     # 编译环境
     runs-on: ${{ matrix.os }}
     - name: checkout repository
-        uses: action/checkout@v2
+      uses: actions/checkout@v2
     # 编译矩阵策略
     strategy:
       matrix:

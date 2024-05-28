@@ -20,21 +20,30 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04]
         qt_ver: [6.2.2]
         qt_arch: [gcc_64]
-    
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, 22.04]
+        qt_ver: [6.2.2]
+        qt_arch: [gcc_64]
     steps:
       - name: Install Qt
-        use: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v2
         with:
           version: ${{ matrix.qt_ver }}
           cached: 'false'
       - name: ubuntu install GL library
-        run: | 
-          sudo apt-get install -y libglew-dev libglfw3-dev
-          sudo apt-get install -y cmake g++ make
+        run: |
+          sudo apt update
+          sudo apt-get install -y libglew-dev libglfw3-dev cmake g++ make gcc
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - name: config cmake
-        run: cmake .
-      - name: ubuntu build
-        run: make
+      - name: build ubuntu
+        run: |
+          cmake .
+          make

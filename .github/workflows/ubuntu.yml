@@ -51,8 +51,8 @@ jobs:
       - name: Install dependencies on Windows
         if: matrix.os == 'windows-2019'
         run: |
-        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-        setx PATH "%PATH%;C:\\Qt\\${{ matrix.qt-version }}\\msvc2019_64\\bin"
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+          setx PATH "%PATH%;C:\\Qt\\${{ matrix.qt-version }}\\msvc2019_64\\bin"
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1

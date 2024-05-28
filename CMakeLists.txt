@@ -31,10 +31,18 @@ ELSE()
 ENDIF()
 
 # 编译路径
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY build/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY build/lib)
 set(ROOT ${PROJECT_SOURCE_DIR})
+
+# # 为Debug和Release配置分别设置可执行文件的输出目录
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/bin/debug)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/build/bin/release)
+    
+# # 为Debug和Release配置分别设置库文件的输出目录
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/lib/debug)
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/build/lib/release)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
+# 为Debug和Release配置分别设置库文件的输出目录
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
 
 # 三方库
 SET(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)

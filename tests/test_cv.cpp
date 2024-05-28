@@ -35,7 +35,7 @@ int main()
     std::cout << im_property.dumps() << std::endl;
     cv::imwrite("test.png", im_property.get_value<cv::Mat>());
 
-    std::string path = "/workspaces/codex/build/tests/test_node/build/lib";
+    std::string path = "lib";
     node::NodeLibManager manager(path);
     for (auto &&i : manager.get_lib_names())
     {

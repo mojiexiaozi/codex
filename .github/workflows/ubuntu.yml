@@ -14,7 +14,6 @@ on:
 
 jobs:
   build:
-    # 编译环境
     runs-on: ${{ matrix.os }}
     - name: checkout repository
       uses: actions/checkout@v2

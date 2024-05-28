@@ -35,13 +35,13 @@
 #endif // OS detect
 
 #ifndef EXPORT
+#ifdef OS_LINUX
 #define EXPORT extern "C"
 #define EXPORT_BEGIN \
     extern "C"       \
     {
 #define EXPORT_END }
-
-#ifdef OS_WINDOWS
+#elif defined(OS_WINDOWS)
 #define EXPORT extern "C" __declspec(dllexport)
 #define EXPORT_BEGIN                 \
     extern "C" __declspec(dllexport) \

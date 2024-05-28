@@ -16,6 +16,8 @@ jobs:
   build:
     # 编译环境
     runs-on: ${{ matrix.os }}
+    - name: checkout repository
+        uses: action/checkout@v2
     # 编译矩阵策略
     strategy:
       matrix:
@@ -57,11 +59,7 @@ jobs:
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1
 
-      - name: checkout repository
-        uses: action/checkout@v3
-
       - name: Build project
-        # if: matrix.os == 'ubuntu-20.04'
         run: |
           cmake -S . -B build
           cmake --build build

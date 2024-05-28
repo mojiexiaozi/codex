@@ -34,5 +34,6 @@
 build/
 thirdparty/*
 !thirdparty/include
-!thirdparty/opencv2
+!thirdparty/opencv2/
+!opencv_world490*.lib
 .vscode/

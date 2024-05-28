@@ -26,8 +26,8 @@ IF(CMAKE_SYSTEM_NAME MATCHES Linux)
     SET(LIB_SUFFIX .so)
     SET(BIN_SUFFIX .so)
 ELSE()
-    SET(LIB_SUFFIX .lib)
-    SET(BIN_SUFFIX .dll)
+    SET(LIB_SUFFIX ${BUILD_FLAG}.lib)
+    SET(BIN_SUFFIX ${BUILD_FLAG}.dll)
 ENDIF()
 
 # 编译路径

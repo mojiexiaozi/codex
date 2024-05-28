@@ -52,8 +52,6 @@ jobs:
         run: |
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
           setx PATH "%PATH%;C:\\Qt\\${{ matrix.qt-version }}\\msvc2019_64\\bin"
-          choco install opencv
-          setx PATH "%PATH%;C:\\Program Files\\opencv\\build\\x64\\vc15\\bin"
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1

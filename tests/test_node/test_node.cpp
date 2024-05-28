@@ -4,7 +4,7 @@
 class TestNode : public node::Node
 {
 public:
-    TestNode(std::string name, uint id) : Node(name, id)
+    TestNode(const std::string &name, uint id) : Node(name, id)
     {
         this->add_property(0, "float", node::Property::NORMAL, node::Property::Float);
         this->add_property(0, "float", node::Property::NORMAL, node::Property::Float);
@@ -13,17 +13,31 @@ public:
         this->add_property("string", node::Property::RUNNING, node::Property::String);
         this->add_property("image", node::Property::OUTPUT, node::Property::Image);
     }
-    TestNode(nlohmann::json cfg) : Node(cfg)
+    TestNode(const nlohmann::json& cfg) : Node(cfg)
     {
     }
-    virtual ~TestNode() {}
+    virtual ~TestNode()
+    {
+        this->uninit();
+    }
     virtual void init()
     {
+        this->uninit();
+        if (this->initialized_)
+        {
+            return;
+        }
         spdlog::info("init TestNode");
+        this->initialized_ = true;
     }
     virtual void uninit()
     {
+        if (!this->initialized_)
+        {
+            return;
+        }
         spdlog::info("uninit TestNode");
+        this->initialized_ = false;
     }
     virtual void execute()
     {
@@ -34,12 +48,12 @@ public:
 const std::string node::Node::name = "test_node";
 const std::string node::Node::node_type = "start";
 
-node::Node *create_node(std::string name, uint id)
+node::Node *create_node(const std::string &name, uint id)
 {
     return new TestNode(name, id);
 }
 
-node::Node *create_node_from_cfg(nlohmann::json cfg)
+node::Node *create_node_from_cfg(const nlohmann::json &cfg)
 {
     return new TestNode(cfg);
 }

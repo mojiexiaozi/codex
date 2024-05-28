@@ -32,22 +32,41 @@ public:
         return cfg;
     }
 
-    virtual ~Node() {}
-    virtual void init() = 0;
-    virtual void uninit() = 0;
-    virtual void execute() = 0;
+    virtual ~Node()
+    {
+    }
 
-    virtual void on_start()
+    void run()
     {
-        this->state = RUNNING;
+        std::lock_guard<std::mutex> lock(this->mutex_);
+        if (this->executed())
+        {
+            return;
+        }
+        try
+        {
+            if (!this->initialized_)
+            {
+                this->init();
+            }
+            this->on_start();
+            this->execute();
+            this->on_finished();
+        }
+        catch (const std::exception &e)
+        {
+            spdlog::error(e.what());
+            this->on_error();
+        }
     }
-    virtual void on_doned()
+    void reset()
     {
-        this->state = FINISHED;
+        std::lock_guard<std::mutex> lock(this->mutex_);
+        this->state = NORMAL;
     }
-    virtual void on_error()
+    bool executed()
     {
-        this->state = ERROR;
+        return FINISHED == this->state || ERROR == this->state;
     }
     void rename(std::string name)
     {
@@ -67,6 +86,7 @@ public:
                       Property::PropertyType property_type,
                       Property::PropertyDataType data_type)
     {
+        std::lock_guard<std::mutex> lock(this->mutex_);
         if (utils::find(this->propertys_, id))
         {
             spdlog::warn("add property failed, id exits: ", id);
@@ -89,6 +109,7 @@ public:
     }
     bool add_property(nlohmann::json cfg)
     {
+        std::lock_guard<std::mutex> lock(this->mutex_);
         uint id = cfg["id"];
         if (utils::find(this->propertys_, id))
         {
@@ -106,15 +127,14 @@ public:
     }
 
     State state{NORMAL};
-
     static const std::string name;
     static const std::string node_type;
 
 protected:
-    Node(std::string name, uint id) : user_name_(name), id_(id)
+    Node(const std::string& name, uint id) : user_name_(name), id_(id)
     {
     }
-    Node(nlohmann::json cfg)
+    Node(const nlohmann::json& cfg)
     {
         this->id_ = cfg["id"];
         this->user_name_ = cfg["user_name"];
@@ -123,9 +143,22 @@ protected:
             this->add_property(p);
         }
     }
-    std::map<uint, Property *> propertys_;
-    uint id_;
-    std::string user_name_;
+    virtual void init() = 0;
+    virtual void uninit() = 0;
+    virtual void execute() = 0;
+
+    virtual void on_start()
+    {
+        this->state = RUNNING;
+    }
+    virtual void on_finished()
+    {
+        this->state = FINISHED;
+    }
+    virtual void on_error()
+    {
+        this->state = ERROR;
+    }
     uint gen_index()
     {
         for (uint i = 0; i < 1000; i++)
@@ -137,5 +170,11 @@ protected:
         }
         return this->propertys_.size() + 1;
     }
+
+    std::map<uint, Property *> propertys_;
+    uint id_{0};
+    std::string user_name_{""};
+    std::mutex mutex_;
+    bool initialized_{false};
 };
 NODE_NAMESPACE_END

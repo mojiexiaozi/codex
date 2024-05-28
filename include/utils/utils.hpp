@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <variant>
+#include <filesystem>
 #include <opencv2/opencv.hpp>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
@@ -39,6 +40,7 @@
     extern "C"       \
     {
 #define EXPORT_END }
+
 #ifdef OS_WINDOWS
 #define EXPORT extern "C" __declspec(dllexport)
 #define EXPORT_BEGIN                 \
@@ -93,5 +95,23 @@ template <typename K, typename V>
 bool find(const std::map<K, V> d, K key)
 {
     return d.find(key) != d.end();
+}
+
+inline bool get_files(const std::string &path, const std::string &suffix, std::vector<std::string> &files)
+{
+    if (!std::filesystem::exists(path))
+    {
+        spdlog::error("path not exists: ", path);
+        return false;
+    }
+
+    for (auto &&file : std::filesystem::directory_iterator(path))
+    {
+        if (file.path().extension() == suffix)
+        {
+            files.push_back(file.path().string());
+        }
+    }
+    return true;
 }
 UTILS_NAMESPACE_END

@@ -5,6 +5,7 @@
 #include "node/property.hpp"
 #include "node/node.hpp"
 #include "node/utils.hpp"
+#include "node/node_manager.hpp"
 #include "utils/dll_helper.hpp"
 #include <iostream>
 
@@ -34,25 +35,25 @@ int main()
     std::cout << im_property.dumps() << std::endl;
     cv::imwrite("test.png", im_property.get_value<cv::Mat>());
 
-    node::Node *test_node;
-    const char *file = "/workspaces/codex/build/tests/test_node/build/lib/libtest_noded.so";
-    auto ok = utils::call_func(file, node::NAME_OF_CREATE_NODE, test_node, std::string("test_node"), 1);
-    if (ok)
+    std::string path = "/workspaces/codex/build/tests/test_node/build/lib";
+    node::NodeLibManager manager(path);
+    for (auto &&i : manager.get_lib_names())
     {
-        test_node->init();
-        test_node->execute();
-        test_node->uninit();
+        spdlog::info("{},{}", i.first, i.second[0]);
+    }
+
+    auto test_node = manager.create_node(std::string("start"), std::string("test_node"), 1);
+    manager.create_node(std::string("start"), std::string("test_node1"), 1);
+    if (test_node)
+    {
+        test_node->run();
         std::cout << test_node->dumps() << std::endl;
     }
 
-    node::Node *cfg_node;
-    auto cfg = test_node->dumps();
-    ok = utils::call_func(file, node::NAME_OF_CREATE_NODE_CFG, cfg_node, cfg);
-    if (ok)
+    auto cfg_node = manager.create_node(test_node->dumps());
+    if (test_node)
     {
-        cfg_node->init();
-        cfg_node->execute();
-        cfg_node->uninit();
+        cfg_node->run();
         std::cout << cfg_node->dumps() << std::endl;
     }
 

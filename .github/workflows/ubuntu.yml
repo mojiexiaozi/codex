@@ -15,8 +15,6 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    - name: checkout repository
-      uses: actions/checkout@v2
     # 编译矩阵策略
     strategy:
       matrix:
@@ -57,6 +55,9 @@ jobs:
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1
+
+      - name: checkout repository
+        uses: actions/checkout@v2
 
       - name: Build project
         run: |

@@ -15,7 +15,7 @@ template <typename T, typename... Args>
 using FuncPtr = T (*)(Args...);
 
 template <typename T, typename... Args>
-bool call_func(const std::string &lib_name, const std::string &func_name, T& res, Args... args)
+bool call_func(const std::string &lib_name, const std::string &func_name, T &res, Args... args)
 {
     FuncPtr<T, Args...> func_p;
 
@@ -28,7 +28,7 @@ bool call_func(const std::string &lib_name, const std::string &func_name, T& res
         return false;
     }
     // 获取共享库中的函数指针并调用
-    func_p = (FuncPtr)GetProcAddress(handle, func_name.c_str());
+    func_p = reinterpret_cast<FuncPtr<T, Args...>>GetProcAddress(handle, func_name);
     if (!func_p)
     {
         spdlog::error("Error getting symbol: {}", GetLastError());

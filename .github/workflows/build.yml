@@ -30,7 +30,7 @@ jobs:
           target: 'desktop'
           arch: 'gcc_64'
           dir: '$HOME/Qt'
-          cached: true
+          cache: true
       - name: setup Qt on Windows
         if: matrix.os == 'windows-2019'
         uses: jurplel/install-qt-action@v4
@@ -40,7 +40,7 @@ jobs:
           target: 'desktop'
           arch: 'win64_msvc2019_64'
           dir: 'C:\\Qt'
-          cached: true
+          cache: true
       - name: Install dependencies on ubuntu
         if: matrix.os == 'ubuntu-20.04'
         run: |

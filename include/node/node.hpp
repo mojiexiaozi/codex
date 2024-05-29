@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "utils/utils.hpp"
 #include "utils.hpp"
 #include "property.hpp"
@@ -13,13 +15,14 @@ public:
         NORMAL,
         RUNNING,
         FINISHED,
-        ERROR,
+        STATE_ERROR
     };
     nlohmann::json dumps()
     {
         nlohmann::json cfg;
         std::vector<nlohmann::json> props;
-        for (auto &&p : propertys_)
+        props.reserve(property_map_.size());
+        for (auto &&p : property_map_)
         {
             props.push_back(p.second->dumps());
         }
@@ -28,13 +31,11 @@ public:
 
         cfg["user_name"] = this->user_name_;
         cfg["id"] = this->id_;
-        cfg["propertys"] = props;
+        cfg["property"] = props;
         return cfg;
     }
 
-    virtual ~Node()
-    {
-    }
+    virtual ~Node() = default;
 
     void run()
     {
@@ -64,19 +65,19 @@ public:
         std::lock_guard<std::mutex> lock(this->mutex_);
         this->state = NORMAL;
     }
-    bool executed()
+    [[nodiscard]] bool executed() const
     {
-        return FINISHED == this->state || ERROR == this->state;
+        return FINISHED == this->state || STATE_ERROR == this->state;
     }
-    void rename(std::string name)
+    void rename(std::string user_name)
     {
-        this->user_name_ = name;
+        this->user_name_ = std::move(user_name);
     }
-    std::string get_name() const
+    [[nodiscard]] std::string get_name() const
     {
         return this->user_name_;
     }
-    uint get_id() const
+    [[nodiscard]] uint get_id() const
     {
         return this->id_;
     }
@@ -87,7 +88,7 @@ public:
                       Property::PropertyDataType data_type)
     {
         std::lock_guard<std::mutex> lock(this->mutex_);
-        if (utils::find(this->propertys_, id))
+        if (utils::find(this->property_map_, id))
         {
             spdlog::warn("add property failed, id exits: ", id);
             return false;
@@ -96,7 +97,7 @@ public:
         auto prop = create_property(id, name, property_type, data_type);
         if (prop != nullptr)
         {
-            this->propertys_[id] = prop;
+            this->property_map_[id] = prop;
             return true;
         }
         return false;
@@ -111,7 +112,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(this->mutex_);
         uint id = cfg["id"];
-        if (utils::find(this->propertys_, id))
+        if (utils::find(this->property_map_, id))
         {
             spdlog::warn("add property failed, id exits: ", id);
             return false;
@@ -120,31 +121,30 @@ public:
         auto prop = create_property(cfg);
         if (prop != nullptr)
         {
-            this->propertys_[id] = prop;
+            this->property_map_[id] = prop;
             return true;
         }
         return false;
     }
-
     State state{NORMAL};
     static const std::string name;
     static const std::string node_type;
 
 protected:
-    Node(const std::string &name, uint id) : user_name_(name), id_(id)
+    Node(std::string user_name, uint id) : user_name_(std::move(user_name)), id_(id)
     {
     }
-    Node(const nlohmann::json &cfg)
+    explicit Node(const nlohmann::json &cfg)
     {
         this->id_ = cfg["id"];
         this->user_name_ = cfg["user_name"];
-        for (auto p : cfg["propertys"])
+        for (const auto& p : cfg["property"])
         {
             this->add_property(p);
         }
     }
     virtual void init() = 0;
-    virtual void uninit() = 0;
+    virtual void unit() = 0;
     virtual void execute() = 0;
 
     virtual void on_start()
@@ -157,23 +157,23 @@ protected:
     }
     virtual void on_error()
     {
-        this->state = ERROR;
+        this->state = STATE_ERROR;
     }
     uint gen_index()
     {
         for (uint i = 0; i < 1000; i++)
         {
-            if (!utils::find(this->propertys_, i))
+            if (!utils::find(this->property_map_, i))
             {
                 return i;
             }
         }
-        return this->propertys_.size() + 1;
+        return this->property_map_.size() + 1;
     }
 
-    std::map<uint, Property *> propertys_;
+    std::map<uint, Property *> property_map_;
     uint id_{0};
-    std::string user_name_{""};
+    std::string user_name_;
     std::mutex mutex_;
     bool initialized_{false};
 };

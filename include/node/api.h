@@ -1,17 +1,15 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "utils/utils.hpp"
 #include "node.hpp"
 
-EXPORT_BEGIN
-node::Node *create_node(const std::string &name, uint id);
-node::Node *create_node_from_cfg(const nlohmann::json &cfg);
-std::string get_node_name()
+EXPORT node::Node *create_node(const std::string &name, uint id);
+EXPORT node::Node *create_node_from_cfg(const nlohmann::json &cfg);
+EXPORT const char* get_node_name()
 {
-    return node::Node::name;
+    return node::Node::name.c_str();
 }
-std::string get_node_type()
+EXPORT const char* get_node_type()
 {
-    return node::Node::node_type;
+    return node::Node::node_type.c_str();
 }
-EXPORT_END

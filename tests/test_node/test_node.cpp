@@ -18,11 +18,11 @@ public:
     }
     virtual ~TestNode()
     {
-        this->uninit();
+        this->unit();
     }
     virtual void init()
     {
-        this->uninit();
+        this->unit();
         if (this->initialized_)
         {
             return;
@@ -30,13 +30,13 @@ public:
         spdlog::info("init TestNode");
         this->initialized_ = true;
     }
-    virtual void uninit()
+    virtual void unit()
     {
         if (!this->initialized_)
         {
             return;
         }
-        spdlog::info("uninit TestNode");
+        spdlog::info("unit TestNode");
         this->initialized_ = false;
     }
     virtual void execute()

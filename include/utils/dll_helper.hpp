@@ -27,8 +27,7 @@ bool call_func(const std::string &lib_name, const std::string &func_name, T &res
         spdlog::error("Error opening library: {}", GetLastError());
         return false;
     }
-    // 获取共享库中的函数指针并调用
-    func_p = reinterpret_cast<FuncPtr<T, Args...>>GetProcAddress(handle, func_name);
+    func_p = reinterpret_cast<FuncPtr<T, Args...>>(GetProcAddress(handle, func_name.c_str()));
     if (!func_p)
     {
         spdlog::error("Error getting symbol: {}", GetLastError());
@@ -36,14 +35,11 @@ bool call_func(const std::string &lib_name, const std::string &func_name, T &res
         return false;
     }
 
-    // 调用共享库中的函数
     res = func_p(args...);
 
-    // 关闭共享库
     FreeLibrary(handle);
     return true;
 #elif defined(OS_LINUX)
-    // 打开共享库
     void *handle = dlopen(lib_name.c_str(), RTLD_LAZY);
     if (!handle)
     {
@@ -51,7 +47,6 @@ bool call_func(const std::string &lib_name, const std::string &func_name, T &res
         return false;
     }
 
-    // 获取共享库中的函数指针并调用
     func_p = reinterpret_cast<FuncPtr<T, Args...>>(dlsym(handle, func_name.c_str()));
     if (!func_p)
     {
@@ -60,14 +55,12 @@ bool call_func(const std::string &lib_name, const std::string &func_name, T &res
         return false;
     }
 
-    // 调用共享库中的函数
     res = func_p(args...);
 
-    // 关闭共享库
     dlclose(handle);
     return true;
 #else
-// TODO: 其它系统
+// TODO: other
 #endif
 }
 UTILS_NAMESPACE_END

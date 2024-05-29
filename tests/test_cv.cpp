@@ -14,8 +14,8 @@ int main()
     auto image_path = "/workspaces/codex/assets/0.png";
     auto img = cv::imread(image_path, cv::IMREAD_COLOR);
     std::cout << image_path << std::endl;
-    spdlog::info("welcome to spdlog");
-    spdlog::error("goodby");
+    spdlog::info("welcome to syslog");
+    spdlog::error("goodly");
 
     node::StringProperty str_property(1, "1", node::Property::NORMAL);
     str_property.set_value(std::string("hi"));

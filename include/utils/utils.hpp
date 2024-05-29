@@ -37,16 +37,8 @@
 #ifndef EXPORT
 #ifdef OS_LINUX
 #define EXPORT extern "C"
-#define EXPORT_BEGIN \
-    extern "C"       \
-    {
-#define EXPORT_END }
 #elif defined(OS_WINDOWS)
 #define EXPORT extern "C" __declspec(dllexport)
-#define EXPORT_BEGIN                 \
-    extern "C" __declspec(dllexport) \
-    {
-#define EXPORT_END }
 #else
 /*OS_UNKNOWN*/
 #endif

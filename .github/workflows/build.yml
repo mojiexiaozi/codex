@@ -26,7 +26,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt-version }}
-          host: 'ubuntu'
+          host: 'linux'
           target: 'desktop'
           arch: 'gcc_64'
           dir: '$HOME/Qt'
@@ -53,8 +53,8 @@ jobs:
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
           setx PATH "%PATH%;C:\\Qt\\${{ matrix.qt-version }}\\msvc2019_64\\bin"
 
-      - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v2
+      # - name: Set up CMake
+      #   uses: jwlawson/actions-setup-cmake@v2
 
       - name: checkout repository
         uses: actions/checkout@v4

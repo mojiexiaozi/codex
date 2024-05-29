@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: setup Qt on Ubuntu
         if: matrix.os == 'ubuntu-20.04'
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt-version }}
           host: 'ubuntu'
@@ -33,7 +33,7 @@ jobs:
           cached: true
       - name: setup Qt on Windows
         if: matrix.os == 'windows-2019'
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt-version }}
           host: 'windows'
@@ -54,10 +54,10 @@ jobs:
           setx PATH "%PATH%;C:\\Qt\\${{ matrix.qt-version }}\\msvc2019_64\\bin"
 
       - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v1
+        uses: jwlawson/actions-setup-cmake@v2
 
       - name: checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build project
         run: |
@@ -75,7 +75,7 @@ jobs:
           move build\\lib build\\bin\\
       
       - name: Upload bin artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}-qt-${{ matrix.qt-version }}
           path: build/bin/

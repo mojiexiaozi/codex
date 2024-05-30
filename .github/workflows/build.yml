@@ -69,10 +69,10 @@ jobs:
         run: |
           mv build/lib build/bin/
 
-      - name: Move library files to bin directory on Windows
-        if: matrix.os == 'windows-2019'
-        run: |
-          move build\\lib build\\bin\\
+      # - name: Move library files to bin directory on Windows
+      #   if: matrix.os == 'windows-2019'
+      #   run: |
+      #     move build\\lib build\\bin\\
       
       - name: Upload bin artifacts
         uses: actions/upload-artifact@v4

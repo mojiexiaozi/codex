@@ -11,7 +11,7 @@
 
 int main()
 {
-    auto image_path = "/workspaces/codex/assets/0.png";
+    auto image_path = "0.png";
     auto img = cv::imread(image_path, cv::IMREAD_COLOR);
     std::cout << image_path << std::endl;
     spdlog::info("welcome to syslog");
@@ -51,33 +51,10 @@ int main()
     }
 
     auto cfg_node = manager.create_node(test_node->dumps());
-    if (test_node)
+    if (cfg_node)
     {
         cfg_node->run();
         std::cout << cfg_node->dumps() << std::endl;
-    }
-
-    std::vector<int> v = {1, 2, 3, 4};
-    auto i = utils::find(v, 2);
-    spdlog::info(i);
-    spdlog::info(utils::find_if(v, [](int n)
-                                { return n % 2 == 0; }));
-
-    spdlog::info(v[i]);
-    spdlog::info(v[-1]);
-
-    for (auto &&i : utils::get_if(v, [](int n)
-                                  { return n % 2 == 0; }))
-    {
-        spdlog::info(i);
-    }
-
-    std::vector<int> res;
-    utils::copy_if(v, res, [](int n)
-                   { return n % 2 == 0; });
-    for (auto &&i : res)
-    {
-        spdlog::info(i);
     }
 
     return 0;

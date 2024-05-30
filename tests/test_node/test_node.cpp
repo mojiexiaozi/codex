@@ -13,16 +13,12 @@ public:
         this->add_property("string", node::Property::RUNNING, node::Property::String);
         this->add_property("image", node::Property::OUTPUT, node::Property::Image);
     }
-    TestNode(const nlohmann::json& cfg) : Node(cfg)
+    explicit TestNode(const nlohmann::json& cfg) : Node(cfg)
     {
     }
-    virtual ~TestNode()
+    ~TestNode() override = default;
+    void init() override
     {
-        this->unit();
-    }
-    virtual void init()
-    {
-        this->unit();
         if (this->initialized_)
         {
             return;
@@ -30,7 +26,7 @@ public:
         spdlog::info("init TestNode");
         this->initialized_ = true;
     }
-    virtual void unit()
+    void unit() override
     {
         if (!this->initialized_)
         {
@@ -39,14 +35,14 @@ public:
         spdlog::info("unit TestNode");
         this->initialized_ = false;
     }
-    virtual void execute()
+    void execute() override
     {
         spdlog::info("execute TestNode");
     }
 };
 
-const std::string node::Node::name = "test_node";
-const std::string node::Node::node_type = "start";
+std::string node::Node::name = "test_node";
+std::string node::Node::node_type = "start";
 
 node::Node *create_node(const std::string &name, uint id)
 {

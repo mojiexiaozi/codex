@@ -8,3 +8,4 @@ endforeach()
 
 
 add_library(${PROJECT_NAME} SHARED ${SRCS})
+target_link_libraries(${PROJECT_NAME} ${OpenCV})

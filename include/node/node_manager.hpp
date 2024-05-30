@@ -5,7 +5,7 @@ NODE_NAMESPACE_BEGIN
 class NodeLibManager
 {
 public:
-    NodeLibManager(const std::string &lib_path)
+    explicit NodeLibManager(const std::string &lib_path)
     {
         std::vector<std::string> libs;
         utils::get_files(lib_path, SUFFIX, libs);
@@ -14,17 +14,19 @@ public:
         {
             try
             {
-                std::string node_name{""};
-                std::string node_type{""};
-                utils::call_func(lib, NAME_OF_GET_NODE_NAME, node_name);
-                utils::call_func(lib, NAME_OF_GET_NODE_TYPE, node_type);
-                if (node_name.length() == 0 || node_type.length() == 0)
+                const char* node_name;
+                const char* node_type;
+                auto res1 = utils::call_func(lib, NAME_OF_GET_NODE_NAME, node_name);
+                auto res2 = utils::call_func(lib, NAME_OF_GET_NODE_TYPE, node_type);
+                if (!res1 || !res2)
                 {
                     spdlog::warn("get node name or node type failed: {}", lib);
                     continue;
                 }
-                spdlog::info("get node type, node name : {},{}", node_type, node_name);
-                this->node_libs_[node_type][node_name] = lib;
+                auto node_type_str = std::string(node_type);
+                auto node_name_str = std::string(node_name);
+                spdlog::info("get node type, node name : {},{}", node_type_str, node_name_str);
+                this->node_libs_[node_type_str][node_name_str] = lib;
             }
             catch (const std::exception &e)
             {

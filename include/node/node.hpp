@@ -39,17 +39,14 @@ public:
 
     void run()
     {
-        std::lock_guard<std::mutex> lock(this->mutex_);
         if (this->executed())
         {
             return;
         }
         try
         {
-            if (!this->initialized_)
-            {
-                this->init();
-            }
+
+            this->init();
             this->on_start();
             this->execute();
             this->on_finished();
@@ -127,8 +124,8 @@ public:
         return false;
     }
     State state{NORMAL};
-    static const std::string name;
-    static const std::string node_type;
+    static std::string name;
+    static std::string node_type;
 
 protected:
     Node(std::string user_name, uint id) : user_name_(std::move(user_name)), id_(id)

@@ -53,8 +53,13 @@ jobs:
           sudo apt-get install -y libgl1-mesa-dev
       
       - name: Download 3rdparty
+        if: matrix.os != 'Windows'
         run: |
           wget -O 3rdparty.zip https://github.com/mojiexiaozi/codex-3rdparty/releases/download/v1.0.0/3rdparty-${{matrix.os}}-${{matrix.build_type}}-v1.0.0.zip
+      - name: Download 3rdparty Invoke-WebRequest
+        if: matrix.os == 'Windows'
+        run: |
+          Invoke-WebRequest -Uri https://github.com/mojiexiaozi/codex-3rdparty/releases/download/v1.0.0/3rdparty-${{matrix.os}}-${{matrix.build_type}}-v1.0.0.zip -OutFile "3rdparty.zip"
       - name: Unzip file
         if: matrix.os == 'Windows'
         run: |

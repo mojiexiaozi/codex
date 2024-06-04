@@ -47,27 +47,21 @@ jobs:
           dir: 'C:\\Qt'
           cache: true
       - name: Install dependencies on ubuntu
-        if: matrix.os == 'ubuntu-20.04'
+        if: matrix.os != 'windows-2019'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgl1-mesa-dev
       
       - name: Download 3rdparty
-        if: matrix.os != 'Windows'
+        if: matrix.os != 'windows-2019'
         run: |
           wget -O 3rdparty.zip https://github.com/mojiexiaozi/codex-3rdparty/releases/download/v1.0.0/3rdparty-${{matrix.os}}-${{matrix.build_type}}-v1.0.0.zip
+          unzip 3rdparty.zip
       - name: Download 3rdparty Invoke-WebRequest
-        if: matrix.os == 'Windows'
+        if: matrix.os == 'windows-2019'
         run: |
           Invoke-WebRequest -Uri https://github.com/mojiexiaozi/codex-3rdparty/releases/download/v1.0.0/3rdparty-${{matrix.os}}-${{matrix.build_type}}-v1.0.0.zip -OutFile "3rdparty.zip"
-      - name: Unzip file
-        if: matrix.os == 'Windows'
-        run: |
           Expand-Archive -Path 3rdparty.zip -DestinationPath .
-      - name: Unzip file
-        if: matrix.os != 'Windows'
-        run: |
-          unzip 3rdparty.zip
 
       - name: Build project
         run: |
@@ -75,7 +69,7 @@ jobs:
           cmake --build build --config ${{ matrix.build_type }}
 
       - name: Move library files to bin directory on Ubuntu
-        if: matrix.os == 'ubuntu-20.04'
+        if: matrix.os != 'windows-2019'
         run: |
           mv build/lib build/bin/
 

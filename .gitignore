@@ -32,5 +32,6 @@
 *.app
 
 build/
-thirdparty
+3rdparty
 .vscode/
+*.zip

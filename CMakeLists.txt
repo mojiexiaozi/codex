@@ -21,33 +21,40 @@ ELSE()
     SET(BUILD_FLAG "")
 ENDIF()
 
-# 编译产物后缀
-IF(CMAKE_SYSTEM_NAME MATCHES Linux)
-    SET(LIB_SUFFIX .so)
-    SET(BIN_SUFFIX .so)
-ELSE()
-    SET(LIB_SUFFIX ${BUILD_FLAG}.lib)
-    SET(BIN_SUFFIX ${BUILD_FLAG}.dll)
-ENDIF()
-
 # 编译路径
 set(ROOT ${PROJECT_SOURCE_DIR})
 
-# # 为Debug和Release配置分别设置可执行文件的输出目录
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/bin/debug)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/build/bin/release)
-    
-# # 为Debug和Release配置分别设置库文件的输出目录
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/lib/debug)
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/build/lib/release)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
+# 为Debug和Release配置分别设置可执行文件的输出目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/build/bin)
 # 为Debug和Release配置分别设置库文件的输出目录
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/build/lib)
 
 # 三方库
-SET(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
-SET(OpenCV_DIR ${THIRDPARTY_DIR}/opencv2/${CMAKE_BUILD_TYPE})
-FILE(GLOB_RECURSE OpenCV ${OpenCV_DIR}/*${LIB_SUFFIX}*)
+SET(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/3rdparty)
+SET(OpenCV_DIR ${THIRDPARTY_DIR}/opencv)
+SET(GoogleTest_DIR ${THIRDPARTY_DIR}/googletest)
+
+IF(CMAKE_SYSTEM_NAME MATCHES Linux)
+    FILE(GLOB_RECURSE OpenCV ${OpenCV_DIR}/lib/${CMAKE_BUILD_TYPE}/*.so*)
+    FILE(GLOB_RECURSE OpenCV_Bin ${OpenCV})
+    FILE(GLOB_RECURSE GoogleTest ${GoogleTest_DIR}/lib/${CMAKE_BUILD_TYPE}/*.a)
+ELSE()
+    FILE(GLOB_RECURSE OpenCV ${OpenCV_DIR}/lib/${CMAKE_BUILD_TYPE}/*.lib)
+    FILE(GLOB_RECURSE OpenCV_Bin ${OpenCV_DIR}/lib/${CMAKE_BUILD_TYPE}/*.dll)
+    FILE(GLOB_RECURSE GoogleTest ${GoogleTest_DIR}/lib/${CMAKE_BUILD_TYPE}/*.lib)
+ENDIF()
+
+# foreach(file  ${OpenCV})
+#     message(${file})
+# endforeach()
+# foreach(file  ${OpenCV_Bin})
+#     message(${file})
+# endforeach()
+# foreach(file  ${GoogleTest})
+#     message(${file})
+# endforeach()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/tests)

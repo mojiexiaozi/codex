@@ -20,7 +20,12 @@ jobs:
       matrix:
         os: [ubuntu-20.04, windows-2019]
         qt-version: [6.2.2]
+        build_type: [Debug]
     steps:
+      - name: setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+      - name: checkout repository
+        uses: actions/checkout@v4
       - name: setup Qt on Ubuntu
         if: matrix.os == 'ubuntu-20.04'
         uses: jurplel/install-qt-action@v4
@@ -45,34 +50,34 @@ jobs:
         if: matrix.os == 'ubuntu-20.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ libgl1-mesa-dev
+          sudo apt-get install -y libgl1-mesa-dev
       
-      - name: Install dependencies on Windows
-        if: matrix.os == 'windows-2019'
+      - name: Download 3rdparty
         run: |
-          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-          setx PATH "%PATH%;C:\\Qt\\${{ matrix.qt-version }}\\msvc2019_64\\bin"
-
-      # - name: Set up CMake
-      #   uses: jwlawson/actions-setup-cmake@v2
-
-      - name: checkout repository
-        uses: actions/checkout@v4
+          wget -O 3rdparty.zip https://github.com/mojiexiaozi/codex-3rdparty/releases/download/v1.0.0/3rdparty-${{matrix.os}}-${{matrix.build_type}}-v1.0.0.zip
+      - name: Unzip file
+        if: matrix.os == 'Windows'
+        run: |
+          Expand-Archive -Path 3rdparty.zip -DestinationPath .
+      - name: Unzip file
+        if: matrix.os != 'Windows'
+        run: |
+          unzip 3rdparty.zip
 
       - name: Build project
         run: |
-          cmake -S . -B build
-          cmake --build build
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          cmake --build build --config ${{ matrix.build_type }}
 
       - name: Move library files to bin directory on Ubuntu
         if: matrix.os == 'ubuntu-20.04'
         run: |
           mv build/lib build/bin/
 
-      # - name: Move library files to bin directory on Windows
-      #   if: matrix.os == 'windows-2019'
-      #   run: |
-      #     move build\\lib build\\bin\\
+      - name: Move library files to bin directory on Windows
+        if: matrix.os == 'windows-2019'
+        run: |
+          Copy-Item -Path build\\lib\\${{ matrix.build_type }}\\ -Destination build\\bin\\${{ matrix.build_type }} -Recurse
       
       - name: Upload bin artifacts
         uses: actions/upload-artifact@v4

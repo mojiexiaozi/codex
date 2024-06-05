@@ -75,7 +75,7 @@ jobs:
       - name: Copy files windows
         if: matrix.os == 'windows-2019'
         run: |
-          xcopy 3rdparty\\opencv\\bin\\${{ matrix.build_type }}\\ build\\bin\\ /E /H /C /I /Y
+          xcopy "3rdparty\\opencv\\bin\\${{ matrix.build_type }}\\" "build\\bin\\" /E /H /C /I /Y
 
       - name: Upload bin artifacts
         uses: actions/upload-artifact@v4

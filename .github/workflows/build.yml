@@ -71,7 +71,7 @@ jobs:
       - name: Copy files Ubuntu
         if: matrix.os != 'windows-2019'
         run: |
-          cp 3rdparty/opencv/bin/${{ matrix.build_type }}/* build/bin/
+          cp 3rdparty/opencv/lib/${{ matrix.build_type }}/* build/bin/
       - name: Copy files windows
         if: matrix.os == 'windows-2019'
         run: |

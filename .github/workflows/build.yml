@@ -75,7 +75,7 @@ jobs:
       - name: Run googletest with windows
         if: matrix.os == 'windows-2019'
         run: |
-          ./build/bin/${{ matrix.build_type }}/codex_test.exe
+          .\build\bin\${{ matrix.build_type }}\codex_test.exe
 
       # - name: Copy files Ubuntu
       #   if: matrix.os != 'windows-2019'

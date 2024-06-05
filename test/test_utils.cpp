@@ -22,8 +22,8 @@ TEST(UtilsTest, VectorFind)
 TEST(UtilsTest, VectorFindIf)
 {
     std::vector<int> int_vec{1,2,3,4};
-    EXPECT_EQ(utils::find(int_vec, [](int n) { return n % 2 == 0; }), 1);
-    EXPECT_EQ(utils::find(int_vec, [](int n) { return n % 3 == 0; }), 2);
-    EXPECT_EQ(utils::find(int_vec, [](int n) { return n % 5 == 0; }), -1);
+    EXPECT_EQ(utils::find_if(int_vec, [](int n) { return n % 2 == 0; }), 1);
+    EXPECT_EQ(utils::find_if(int_vec, [](int n) { return n % 3 == 0; }), 2);
+    EXPECT_EQ(utils::find_if(int_vec, [](int n) { return n % 5 == 0; }), -1);
 
 }

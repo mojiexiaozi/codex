@@ -26,31 +26,31 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v2
       - name: checkout repository
         uses: actions/checkout@v4
-      - name: setup Qt on Ubuntu
-        if: matrix.os == 'ubuntu-20.04'
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ matrix.qt-version }}
-          host: 'linux'
-          target: 'desktop'
-          arch: 'gcc_64'
-          dir: '$HOME/Qt'
-          cache: true
-      - name: setup Qt on Windows
-        if: matrix.os == 'windows-2019'
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ matrix.qt-version }}
-          host: 'windows'
-          target: 'desktop'
-          arch: 'win64_msvc2019_64'
-          dir: 'C:\\Qt'
-          cache: true
-      - name: Install dependencies on ubuntu
-        if: matrix.os != 'windows-2019'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev
+      # - name: setup Qt on Ubuntu
+      #   if: matrix.os == 'ubuntu-20.04'
+      #   uses: jurplel/install-qt-action@v4
+      #   with:
+      #     version: ${{ matrix.qt-version }}
+      #     host: 'linux'
+      #     target: 'desktop'
+      #     arch: 'gcc_64'
+      #     dir: '$HOME/Qt'
+      #     cache: true
+      # - name: setup Qt on Windows
+      #   if: matrix.os == 'windows-2019'
+      #   uses: jurplel/install-qt-action@v4
+      #   with:
+      #     version: ${{ matrix.qt-version }}
+      #     host: 'windows'
+      #     target: 'desktop'
+      #     arch: 'win64_msvc2019_64'
+      #     dir: 'C:\\Qt'
+      #     cache: true
+      # - name: Install dependencies on ubuntu
+      #   if: matrix.os != 'windows-2019'
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libgl1-mesa-dev
       
       - name: Download 3rdparty
         if: matrix.os != 'windows-2019'

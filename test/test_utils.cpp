@@ -15,8 +15,8 @@ TEST(UtilsTest, VectorFind)
     EXPECT_EQ(utils::find(float_vec, 0.1), -1);
 
     std::vector<std::string> str_vec{"1.1","2.1","3.1","4.1"};
-    EXPECT_EQ(utils::find(str_vec, "1.1"), 0);
-    EXPECT_EQ(utils::find(str_vec, "0.1"), -1);
+    EXPECT_EQ(utils::find(str_vec, std::string("1.1"), 0);
+    EXPECT_EQ(utils::find(str_vec, std::string("0.1")), -1);
 }
 
 TEST(UtilsTest, VectorFindIf)

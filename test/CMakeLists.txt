@@ -1,0 +1,13 @@
+SET(PROJECT_NAME codex_test)
+project(${PROJECT_NAME} VERSION 0.0.1)
+
+include_directories(${THIRDPARTY_DIR}/include)
+include_directories(${ROOT}/include)
+
+FILE(GLOB_RECURSE SRCS *.cpp)
+add_executable(${PROJECT_NAME} ${SRCS})
+target_link_libraries(${PROJECT_NAME} ${GoogleTest})
+IF(CMAKE_SYSTEM_NAME MATCHES Linux)
+target_link_libraries(${PROJECT_NAME} dl pthread)
+ELSE()
+ENDIF()

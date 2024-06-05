@@ -68,15 +68,19 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           cmake --build build --config ${{ matrix.build_type }}
 
-      - name: Move library files to bin directory on Ubuntu
-        if: matrix.os != 'windows-2019'
+      # - name: Move library files to bin directory on Ubuntu
+      #   if: matrix.os != 'windows-2019'
+      #   run: |
+      #     mv build/lib build/bin/
+      #     cp 3rdparty/opencv/bin/${{ matrix.build_type }}/* build/bin/
+      - name: Copy files
         run: |
-          mv build/lib build/bin/
+          xcopy 3rdparty/opencv/bin/${{ matrix.build_type }} build/bin/ /E /H /C /I /Y
 
-      #- name: Move library files to bin directory on Windows
-        #if: matrix.os == 'windows-2019'
-        #run: |
-          #Copy-Item -Path build\\lib\\${{ matrix.build_type }}\\ -Destination build\\bin\\${{ matrix.build_type }} -Recurse
+      # - name: Move library files to bin directory on Windows
+      #   if: matrix.os == 'windows-2019'
+      #   run: |
+      #     Copy-Item -Path 3rdparty\\opencv\\bin\\${{ matrix.build_type }}\\ -Destination build\\bin\\${{ matrix.build_type }} -Recurse
       
       - name: Upload bin artifacts
         uses: actions/upload-artifact@v4

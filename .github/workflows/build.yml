@@ -68,10 +68,10 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           cmake --build build --config ${{ matrix.build_type }}
 
-      - name: Move library files to bin directory on Ubuntu
-        if: matrix.os != 'windows-2019'
-        run: |
-          mv build/lib build/bin/
+      #- name: Move library files to bin directory on Ubuntu
+        #if: matrix.os != 'windows-2019'
+        #run: |
+          #mv build/lib build/bin/
 
       - name: Move library files to bin directory on Windows
         if: matrix.os == 'windows-2019'

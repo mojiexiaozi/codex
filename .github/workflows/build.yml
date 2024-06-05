@@ -68,12 +68,12 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           cmake --build build --config ${{ matrix.build_type }}
 
-      # - name: Move library files to bin directory on Ubuntu
-      #   if: matrix.os != 'windows-2019'
-      #   run: |
-      #     mv build/lib build/bin/
-      #     cp 3rdparty/opencv/bin/${{ matrix.build_type }}/* build/bin/
-      - name: Copy files
+      - name: Copy files Ubuntu
+        if: matrix.os != 'windows-2019'
+        run: |
+          cp 3rdparty/opencv/bin/${{ matrix.build_type }}/* build/bin/
+      - name: Copy files windows
+        if: matrix.os == 'windows-2019'
         run: |
           xcopy 3rdparty/opencv/bin/${{ matrix.build_type }} build/bin/ /E /H /C /I /Y
 

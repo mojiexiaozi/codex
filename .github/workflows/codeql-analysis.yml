@@ -30,6 +30,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Download 3rdparty
+      run: |
+        wget -O 3rdparty.zip https://github.com/mojiexiaozi/codex-3rdparty/releases/download/v1.0.0/3rdparty-${{matrix.os}}-${{matrix.build_type}}-v1.0.0.zip
+        unzip 3rdparty.zip
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2

@@ -95,7 +95,7 @@ jobs:
       - name: Build and Package
         if: matrix.os != 'windows-2019'
         run: |
-          tar -czvf build.tar.gz build
+          tar -czvf build.tar.gz build/bin
 
       - name: Copy to remote server
         if: matrix.os != 'windows-2019'
@@ -120,3 +120,4 @@ jobs:
             # 解压并部署应用，根据实际情况调整
             cd ~/codex
             tar -xzvf build.tar.gz
+            rm build.tar.gz

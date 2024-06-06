@@ -16,8 +16,8 @@ public:
             {
                 const char* node_name;
                 const char* node_type;
-                auto res1 = this.lib_manager_.call_func(lib, NAME_OF_GET_NODE_NAME, node_name);
-                auto res2 = this.lib_manager_.call_func(lib, NAME_OF_GET_NODE_TYPE, node_type);
+                auto res1 = this->lib_manager_.call_func(lib, NAME_OF_GET_NODE_NAME, node_name);
+                auto res2 = this->lib_manager_.call_func(lib, NAME_OF_GET_NODE_TYPE, node_type);
                 if (!res1 || !res2)
                 {
                     spdlog::warn("get node name or node type failed: {}", lib);
@@ -43,7 +43,8 @@ public:
             return node;
         }
         auto lib = this->node_libs_[node_type][node_name];
-        this.lib_manager_.call_func(lib, node::NAME_OF_CREATE_NODE, node, node_name + std::to_string(node_id), node_id);
+        this->lib_manager_.call_func(lib, node::NAME_OF_CREATE_NODE, node, node_name + std::to_string(node_id),
+                                     node_id);
         return node;
     }
     Node* create_node(const nlohmann::json& cfg)
@@ -57,7 +58,7 @@ public:
             return node;
         }
         auto lib = this->node_libs_[node_type][node_name];
-        this.lib_manager_.call_func(lib, node::NAME_OF_CREATE_NODE_CFG, node, cfg);
+        this->lib_manager_.call_func(lib, node::NAME_OF_CREATE_NODE_CFG, node, cfg);
         return node;
     }
     std::map<std::string, std::vector<std::string>> get_lib_names()

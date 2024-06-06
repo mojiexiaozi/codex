@@ -1,13 +1,13 @@
-#include <iostream>
-#include <opencv2/opencv.hpp>
 #include <spdlog/spdlog.h>
 
-#include "node/property.hpp"
-#include "node/node.hpp"
-#include "node/utils.hpp"
-#include "node/node_manager.hpp"
-#include "utils/dll_helper.hpp"
 #include <iostream>
+#include <opencv2/opencv.hpp>
+
+#include "node/node.hpp"
+#include "node/node_manager.hpp"
+#include "node/property.hpp"
+#include "node/utils.hpp"
+#include "utils/dll_helper.hpp"
 
 int main()
 {
@@ -37,7 +37,7 @@ int main()
 
     std::string path = "lib";
     node::NodeLibManager manager(path);
-    for (auto &&i : manager.get_lib_names())
+    for (auto&& i : manager.get_lib_names())
     {
         spdlog::info("{},{}", i.first, i.second[0]);
     }

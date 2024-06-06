@@ -2,9 +2,9 @@
 
 #include <utility>
 
-#include "utils/utils.hpp"
-#include "utils.hpp"
 #include "property.hpp"
+#include "utils.hpp"
+#include "utils/utils.hpp"
 
 NODE_NAMESPACE_BEGIN
 class Node
@@ -22,7 +22,7 @@ public:
         nlohmann::json cfg;
         std::vector<nlohmann::json> props;
         props.reserve(property_map_.size());
-        for (auto &&p : property_map_)
+        for (auto&& p : property_map_)
         {
             props.push_back(p.second->dumps());
         }
@@ -45,13 +45,12 @@ public:
         }
         try
         {
-
             this->init();
             this->on_start();
             this->execute();
             this->on_finished();
         }
-        catch (const std::exception &e)
+        catch (const std::exception& e)
         {
             spdlog::error(e.what());
             this->on_error();
@@ -62,26 +61,12 @@ public:
         std::lock_guard<std::mutex> lock(this->mutex_);
         this->state = NORMAL;
     }
-    [[nodiscard]] bool executed() const
-    {
-        return FINISHED == this->state || STATE_ERROR == this->state;
-    }
-    void rename(std::string user_name)
-    {
-        this->user_name_ = std::move(user_name);
-    }
-    [[nodiscard]] std::string get_name() const
-    {
-        return this->user_name_;
-    }
-    [[nodiscard]] uint get_id() const
-    {
-        return this->id_;
-    }
+    [[nodiscard]] bool executed() const { return FINISHED == this->state || STATE_ERROR == this->state; }
+    void rename(std::string user_name) { this->user_name_ = std::move(user_name); }
+    [[nodiscard]] std::string get_name() const { return this->user_name_; }
+    [[nodiscard]] uint get_id() const { return this->id_; }
 
-    bool add_property(const uint &id,
-                      const std::string &name,
-                      Property::PropertyType property_type,
+    bool add_property(const uint& id, const std::string& name, Property::PropertyType property_type,
                       Property::PropertyDataType data_type)
     {
         std::lock_guard<std::mutex> lock(this->mutex_);
@@ -99,8 +84,7 @@ public:
         }
         return false;
     }
-    bool add_property(const std::string &name,
-                      Property::PropertyType property_type,
+    bool add_property(const std::string& name, Property::PropertyType property_type,
                       Property::PropertyDataType data_type)
     {
         return this->add_property(this->gen_index(), name, property_type, data_type);
@@ -128,10 +112,8 @@ public:
     static std::string node_type;
 
 protected:
-    Node(std::string user_name, uint id) : user_name_(std::move(user_name)), id_(id)
-    {
-    }
-    explicit Node(const nlohmann::json &cfg)
+    Node(std::string user_name, uint id) : user_name_(std::move(user_name)), id_(id) {}
+    explicit Node(const nlohmann::json& cfg)
     {
         this->id_ = cfg["id"];
         this->user_name_ = cfg["user_name"];
@@ -144,18 +126,9 @@ protected:
     virtual void unit() = 0;
     virtual void execute() = 0;
 
-    virtual void on_start()
-    {
-        this->state = RUNNING;
-    }
-    virtual void on_finished()
-    {
-        this->state = FINISHED;
-    }
-    virtual void on_error()
-    {
-        this->state = STATE_ERROR;
-    }
+    virtual void on_start() { this->state = RUNNING; }
+    virtual void on_finished() { this->state = FINISHED; }
+    virtual void on_error() { this->state = STATE_ERROR; }
     uint gen_index()
     {
         for (uint i = 0; i < 1000; i++)
@@ -168,7 +141,7 @@ protected:
         return this->property_map_.size() + 1;
     }
 
-    std::map<uint, Property *> property_map_;
+    std::map<uint, Property*> property_map_;
     uint id_{0};
     std::string user_name_;
     std::mutex mutex_;

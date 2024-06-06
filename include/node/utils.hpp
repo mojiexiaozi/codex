@@ -1,6 +1,6 @@
 #pragma once
-#include "utils/utils.hpp"
 #include "utils/dll_helper.hpp"
+#include "utils/utils.hpp"
 
 #ifndef NODE_NAMESPACE_BEGIN
 #define NODE_NAMESPACE_BEGIN \

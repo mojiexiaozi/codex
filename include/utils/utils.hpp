@@ -1,14 +1,15 @@
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <vector>
-#include <map>
-#include <variant>
-#include <filesystem>
-#include <opencv2/opencv.hpp>
-#include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
+
+#include <filesystem>
+#include <iostream>
+#include <map>
+#include <nlohmann/json.hpp>
+#include <opencv2/opencv.hpp>
+#include <string>
+#include <variant>
+#include <vector>
 
 #ifndef UTILS_NAMESPACE_BEGIN
 #define UTILS_NAMESPACE_BEGIN \
@@ -18,7 +19,8 @@
 #endif
 
 /* Windows */
-#if defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
+#if defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__TOS_WIN__) || \
+    defined(__WINDOWS__)
 #define OS_WINDOWS 1
 
 /* Linux */
@@ -32,7 +34,7 @@
 /* Unknown OS */
 #else
 #define OS_UNKNOWN 4
-#endif // OS detect
+#endif  // OS detect
 
 #ifndef EXPORT
 #ifdef OS_LINUX
@@ -46,7 +48,7 @@
 
 UTILS_NAMESPACE_BEGIN
 template <typename T>
-int find(const std::vector<T> &vec, const T &target)
+int find(const std::vector<T>& vec, const T& target)
 {
     auto it = std::find(vec.begin(), vec.end(), target);
     if (it == vec.end())
@@ -58,7 +60,7 @@ int find(const std::vector<T> &vec, const T &target)
 }
 
 template <typename T, typename FUNC>
-int find_if(const std::vector<T> &vec, FUNC func)
+int find_if(const std::vector<T>& vec, FUNC func)
 {
     auto it = std::find_if(vec.begin(), vec.end(), func);
     if (it == vec.end())
@@ -70,7 +72,7 @@ int find_if(const std::vector<T> &vec, FUNC func)
 }
 
 template <typename T, typename FUNC>
-std::vector<T> get_if(const std::vector<T> &source, FUNC func)
+std::vector<T> get_if(const std::vector<T>& source, FUNC func)
 {
     std::vector<T> res;
     std::copy_if(source.begin(), source.end(), std::back_inserter(res), func);
@@ -78,7 +80,7 @@ std::vector<T> get_if(const std::vector<T> &source, FUNC func)
 }
 
 template <typename T, typename FUNC>
-void copy_if(const std::vector<T> &source, std::vector<T> &dest, FUNC func)
+void copy_if(const std::vector<T>& source, std::vector<T>& dest, FUNC func)
 {
     std::copy_if(source.begin(), source.end(), std::back_inserter(dest), func);
 }
@@ -89,7 +91,7 @@ bool find(const std::map<K, V> d, K key)
     return d.find(key) != d.end();
 }
 
-inline bool get_files(const std::string &path, const std::string &suffix, std::vector<std::string> &files)
+inline bool get_files(const std::string& path, const std::string& suffix, std::vector<std::string>& files)
 {
     if (!std::filesystem::exists(path))
     {
@@ -97,7 +99,7 @@ inline bool get_files(const std::string &path, const std::string &suffix, std::v
         return false;
     }
 
-    for (auto &&file : std::filesystem::directory_iterator(path))
+    for (auto&& file : std::filesystem::directory_iterator(path))
     {
         if (file.path().extension() == suffix)
         {

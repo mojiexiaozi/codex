@@ -107,6 +107,8 @@ public:
         }
         return false;
     }
+    bool add_child() {}
+    bool add_parent() {}
     State state{NORMAL};
     static std::string name;
     static std::string node_type;
@@ -146,5 +148,7 @@ protected:
     std::string user_name_;
     std::mutex mutex_;
     bool initialized_{false};
+    std::vector<uint> parent_ids_;
+    std::vector<uint> child_ids_;
 };
 NODE_NAMESPACE_END
